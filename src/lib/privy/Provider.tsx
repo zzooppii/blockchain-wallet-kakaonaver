@@ -1,6 +1,13 @@
 "use client";
 
 import { PrivyProvider } from "@privy-io/react-auth";
+import { klaytnBaobab } from "viem/chains";
+
+// Kaia Kairos = 구 Klaytn Baobab (체인 ID 1001)
+const kaiaKairos = {
+  ...klaytnBaobab,
+  name: "Kaia Kairos Testnet",
+} as const;
 
 export default function PrivyProviderWrapper({
   children,
@@ -18,6 +25,14 @@ export default function PrivyProviderWrapper({
         appearance: {
           theme: "light",
           accentColor: "#FEE500",
+          logo: "/logo.png",
+        },
+        supportedChains: [kaiaKairos],
+        defaultChain: kaiaKairos,
+        embeddedWallets: {
+          ethereum: {
+            createOnLogin: "users-without-wallets",
+          },
         },
       }}
     >
