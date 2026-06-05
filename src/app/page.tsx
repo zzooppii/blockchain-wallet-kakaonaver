@@ -30,6 +30,9 @@ function saveTxs(txs: TxRecord[]) {
 }
 
 // ── Privy 훅은 이 컴포넌트 안에서만 호출 (PrivyProvider 필수) ──
+import ChainSwitcher from "@/components/ChainSwitcher";
+import AssetsTab from "@/components/AssetsTab";
+
 function PrivySection({
   onToast,
   txs,
@@ -51,7 +54,9 @@ function PrivySection({
     }, [session?.privyJwt]),
   });
 
-  const walletAddress = wallets.find((w) => w.walletClientType === "privy")?.address;
+  const smartWallet = wallets.find((w) => w.walletClientType === "smart-wallet");
+  const embeddedWallet = smartWallet || wallets.find((w) => w.walletClientType === "privy");
+  const walletAddress = embeddedWallet?.address;
 
   if (!authenticated) {
     return (
@@ -67,7 +72,9 @@ function PrivySection({
   return (
     <>
       <WalletAddress address={walletAddress} />
+      <ChainSwitcher />
       <WalletBalance address={walletAddress} />
+      <AssetsTab />
       <SendTransaction onToast={onToast} onTxSent={onTxSent} />
       <TransactionHistory transactions={txs} />
     </>
