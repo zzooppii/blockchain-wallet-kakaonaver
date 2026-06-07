@@ -8,11 +8,17 @@ interface Props {
   isLoggedIn: boolean;
 }
 
-export default function AuthButton({ isLoggedIn }: Props) {
+const HAS_PRIVY = !!process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+
+function PrivyAuthButton({ isLoggedIn }: Props) {
   const { ready } = usePrivy();
 
   if (!ready) return <LoadingSpinner />;
 
+  return <PureAuthButton isLoggedIn={isLoggedIn} />;
+}
+
+function PureAuthButton({ isLoggedIn }: Props) {
   if (isLoggedIn) {
     return (
       <button
@@ -40,4 +46,11 @@ export default function AuthButton({ isLoggedIn }: Props) {
       </button>
     </div>
   );
+}
+
+export default function AuthButton(props: Props) {
+  if (HAS_PRIVY) {
+    return <PrivyAuthButton {...props} />;
+  }
+  return <PureAuthButton {...props} />;
 }
